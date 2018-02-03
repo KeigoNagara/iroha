@@ -223,12 +223,10 @@ namespace iroha {
         const Command &command,
         ametsuchi::WsvQuery &queries,
         const std::string &creator_account_id) {
-      // TODO: no additional checks ?
       return true;
     }
 
-    // --------------------------|Revoke
-    // Permission|-----------------------------
+    // -----------|Revoke Permission|-----------
     std::string RevokePermissionExecutor::commandName() const noexcept {
       return "RevokePermission";
     }
@@ -261,7 +259,6 @@ namespace iroha {
         const Command &command,
         ametsuchi::WsvQuery &queries,
         const std::string &creator_account_id) {
-      // TODO: no checks needed ?
       return true;
     }
 
@@ -288,7 +285,8 @@ namespace iroha {
       if (add_asset_quantity.amount.getPrecision() != precision) {
         return makeExecutionError(
             (boost::format("precision mismatch: expected %d, but got %d")
-             % precision % add_asset_quantity.amount.getPrecision())
+             % precision
+             % add_asset_quantity.amount.getPrecision())
                 .str());
       }
 
@@ -326,7 +324,8 @@ namespace iroha {
       auto cmd_value = static_cast<const AddAssetQuantity &>(command);
       // Check if creator has MoneyCreator permission.
       // One can only add to his/her account
-      // TODO: In future: Separate money creation for distinct assets
+      // TODO: 03.02.2018 grimadas IR-935, Separate money creation for distinct assets, now: any having
+      // permission "can_add_asset_qty" can add any asset
       return creator_account_id == cmd_value.account_id
           and checkAccountRolePermission(
                   creator_account_id, queries, can_add_asset_qty);
@@ -364,7 +363,8 @@ namespace iroha {
       if (subtract_asset_quantity.amount.getPrecision() != precision) {
         return makeExecutionError(
             (boost::format("precision mismatch: expected %d, but got %d")
-             % precision % subtract_asset_quantity.amount.getPrecision())
+             % precision
+             % subtract_asset_quantity.amount.getPrecision())
                 .str());
       }
       auto account_asset = queries.getAccountAsset(
@@ -417,7 +417,8 @@ namespace iroha {
         const std::string &creator_account_id) {
       auto add_peer = static_cast<const AddPeer &>(command);
       // Will return false if peer is not unique
-      return errorIfNot(commands.insertPeer(add_peer.peer), "peer is not unique");
+      return errorIfNot(commands.insertPeer(add_peer.peer),
+                        "peer is not unique");
     }
 
     bool AddPeerExecutor::hasPermissions(
@@ -503,7 +504,7 @@ namespace iroha {
             (boost::format("Domain %s not found") % create_account.domain_id)
                 .str());
       }
-      // TODO: remove insert signatory from here ?
+      // Account must have unique initial pubkey
       if (not commands.insertSignatory(create_account.pubkey)) {
         return makeExecutionError("failed to insert signatory");
       }
@@ -720,8 +721,7 @@ namespace iroha {
 
       return
           // Case 1. Creator set details for his account
-          creator_account_id == cmd.account_id
-          or
+          creator_account_id == cmd.account_id or
           // Case 2. Creator has grantable permission to set account key/value
           queries.hasAccountGrantablePermission(
               creator_account_id, cmd.account_id, can_set_detail);
