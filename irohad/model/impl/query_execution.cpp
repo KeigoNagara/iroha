@@ -315,7 +315,7 @@ std::shared_ptr<QueryResponse> QueryProcessingFactory::executeGetSignatories(
 
 std::shared_ptr<QueryResponse> QueryProcessingFactory::execute(
     std::shared_ptr<const model::Query> query) {
-  // TODO: 03.02.2018 grimadas IR-936 26/09/17 Nasrulin: change to handler map or/with templates #VARIANT
+  // TODO: 03.02.2018 grimadas IR-936 change to handler map or/with templates #VARIANT
   if (instanceof <GetAccount>(query.get())) {
     auto qry = std::static_pointer_cast<const GetAccount>(query);
 
