@@ -19,6 +19,7 @@
 #define IROHA_NETWORK_MOCKS_HPP
 
 #include <gmock/gmock.h>
+#include "interfaces/iroha_internal/commit.hpp"
 #include "network/block_loader.hpp"
 #include "network/consensus_gate.hpp"
 #include "network/ordering_gate.hpp"
@@ -39,10 +40,12 @@ namespace iroha {
     class MockBlockLoader : public BlockLoader {
      public:
       MOCK_METHOD1(retrieveBlocks,
-                   rxcpp::observable<model::Block>(model::Peer::KeyType));
+                   rxcpp::observable<shared_model::interface::Commit>(
+                       shared_model::crypto::PublicKey));
       MOCK_METHOD2(retrieveBlock,
-                   nonstd::optional<model::Block>(model::Peer::KeyType,
-                                                  model::Block::HashType));
+                   nonstd::optional<shared_model::interface::Commit>(
+                       shared_model::crypto::PublicKey,
+                       shared_model::interface::Block::HashType));
     };
 
     class MockOrderingGate : public OrderingGate {
