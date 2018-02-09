@@ -20,17 +20,20 @@
 #include "ametsuchi/impl/postgres_wsv_query.hpp"
 #include "consensus/consensus_common.hpp"
 
+#include "backend/protobuf/from_old_model.hpp"
+
 namespace iroha {
   namespace validation {
     ChainValidatorImpl::ChainValidatorImpl() {
       log_ = logger::log("ChainValidator");
     }
 
-    bool ChainValidatorImpl::validateBlock(const model::Block &block,
+    bool ChainValidatorImpl::validateBlock(const model::Block &old_block,
                                            ametsuchi::MutableStorage &storage) {
+      auto block = shared_model::proto::from_old(old_block);
       log_->info("validate block: height {}, hash {}",
-                 block.height,
-                 block.hash.to_hexstring());
+                 block.height(),
+                 block.hash().hex());
       auto apply_block = [](
           const auto &block, auto &queries, const auto &top_hash) {
         auto peers = queries.getPeers();
@@ -44,18 +47,19 @@ namespace iroha {
       };
 
       // Apply to temporary storage
-      return storage.apply(block, apply_block);
+      return storage.apply(old_block, apply_block);
     }
 
     bool ChainValidatorImpl::validateChain(Commit blocks,
                                            ametsuchi::MutableStorage &storage) {
       log_->info("validate chain...");
       return blocks
-          .all([this, &storage](auto block) {
+          .all([this, &storage](auto old_block) {
+            auto block = shared_model::proto::from_old(old_block);
             log_->info("Validating block: height {}, hash {}",
-                       block.height,
-                       block.hash.to_hexstring());
-            return this->validateBlock(block, storage);
+                       block.height(),
+                       block.hash().hex());
+            return this->validateBlock(old_block, storage);
           })
           .as_blocking()
           .first();

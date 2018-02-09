@@ -21,7 +21,6 @@
 #include <rxcpp/rx-observable.hpp>
 
 #include "ametsuchi/mutable_storage.hpp"
-#include "model/block.hpp"
 #include "model/commit.hpp"
 
 namespace iroha {
