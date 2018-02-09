@@ -35,15 +35,16 @@ namespace iroha {
                  block.height(),
                  block.hash().hex());
       auto apply_block = [](
-          const auto &block, auto &queries, const auto &top_hash) {
+          const auto &old_block, auto &queries, const auto &top_hash) {
+        auto block = shared_model::proto::from_old(old_block);
         auto peers = queries.getPeers();
         if (not peers.has_value()) {
           return false;
         }
-        return block.prev_hash == top_hash
-            and consensus::hasSupermajority(block.sigs.size(),
+        return old_block.prev_hash == top_hash
+            and consensus::hasSupermajority(block.signatures().size(),
                                             peers.value().size())
-            and consensus::peersSubset(block.sigs, peers.value());
+            and consensus::peersSubset(old_block.sigs, peers.value());
       };
 
       // Apply to temporary storage
