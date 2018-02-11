@@ -27,6 +27,12 @@
 #include "ametsuchi/temporary_factory.hpp"
 #include "ametsuchi/temporary_wsv.hpp"
 #include "ametsuchi/wsv_query.hpp"
+#include "model/account.hpp"
+#include "model/asset.hpp"
+#include "model/peer.hpp"
+#include "model/domain.hpp"
+#include "model/account_asset.hpp"
+
 
 #include <boost/optional.hpp>
 
@@ -146,8 +152,8 @@ namespace iroha {
       MOCK_METHOD2(
           apply,
           bool(const model::Block &,
-               std::function<bool(
-                   const model::Block &, WsvQuery &, const hash256_t &)>));
+               std::function<
+                   bool(const model::Block &, WsvQuery &, const hash256_t &)>));
     };
 
     /**

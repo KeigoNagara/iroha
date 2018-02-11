@@ -16,25 +16,24 @@
  */
 
 #include <gtest/gtest.h>
-#include <boost/range/combine.hpp>
 #include <boost/range/algorithm/for_each.hpp>
+#include <boost/range/combine.hpp>
 
-#include <model/commands/create_role.hpp>
+#include "ametsuchi/impl/postgres_wsv_query.hpp"
+#include "ametsuchi/impl/postgres_block_query.hpp"
 #include "ametsuchi/impl/storage_impl.hpp"
+#include "ametsuchi/mutable_storage.hpp"
 #include "common/byteutils.hpp"
-#include "cryptography/ed25519_sha3_impl/internal/sha3_hash.hpp"
 #include "framework/test_subscriber.hpp"
-#include "model/commands/add_asset_quantity.hpp"
-#include "model/commands/add_peer.hpp"
-#include "model/commands/add_signatory.hpp"
-#include "model/commands/create_account.hpp"
-#include "model/commands/create_asset.hpp"
-#include "model/commands/create_domain.hpp"
-#include "model/commands/remove_signatory.hpp"
-#include "model/commands/set_quorum.hpp"
-#include "model/commands/transfer_asset.hpp"
+#include "model/account.hpp"
+#include "model/account_asset.hpp"
+#include "model/asset.hpp"
+#include "model/commands/all.hpp"
 #include "model/converters/pb_block_factory.hpp"
+#include "model/domain.hpp"
+#include "model/peer.hpp"
 #include "model/permissions.hpp"
+#include "model/sha3_hash.hpp"
 #include "module/irohad/ametsuchi/ametsuchi_fixture.hpp"
 
 using namespace iroha::ametsuchi;
@@ -155,8 +154,7 @@ void apply(S &&storage, const Block &block) {
 
 TEST_F(AmetsuchiTest, GetBlocksCompletedWhenCalled) {
   // Commit block => get block => observable completed
-  auto storage =
-      StorageImpl::create(block_store_path, redishost_, redisport_, pgopt_);
+  auto storage = StorageImpl::create(block_store_path, pgopt_);
   ASSERT_TRUE(storage);
   auto blocks = storage->getBlockQuery();
 
@@ -172,8 +170,7 @@ TEST_F(AmetsuchiTest, GetBlocksCompletedWhenCalled) {
 }
 
 TEST_F(AmetsuchiTest, SampleTest) {
-  auto storage =
-      StorageImpl::create(block_store_path, redishost_, redisport_, pgopt_);
+  auto storage = StorageImpl::create(block_store_path, pgopt_);
   ASSERT_TRUE(storage);
   auto wsv = storage->getWsvQuery();
   auto blocks = storage->getBlockQuery();
@@ -245,9 +242,10 @@ TEST_F(AmetsuchiTest, SampleTest) {
   validateAccountAsset(wsv, user2id, assetid, iroha::Amount(100, 2));
 
   // Block store tests
+  auto hashes = {block1hash, block2hash};
   validateCalls(
       blocks->getBlocks(1, 2),
-      [ i = 0, hashes = {block1hash, block2hash} ](auto eachBlock) mutable {
+      [i = 0, &hashes](auto eachBlock) mutable {
         EXPECT_EQ(*(hashes.begin() + i), eachBlock.hash);
         ++i;
       },
@@ -264,15 +262,14 @@ TEST_F(AmetsuchiTest, SampleTest) {
 }
 
 TEST_F(AmetsuchiTest, PeerTest) {
-  auto storage =
-      StorageImpl::create(block_store_path, redishost_, redisport_, pgopt_);
+  auto storage = StorageImpl::create(block_store_path, pgopt_);
   ASSERT_TRUE(storage);
   auto wsv = storage->getWsvQuery();
 
   Transaction txn;
   AddPeer addPeer;
-  addPeer.peer_key.at(0) = 1;
-  addPeer.address = "192.168.0.1:50051";
+  addPeer.peer.pubkey.at(0) = 1;
+  addPeer.peer.address = "192.168.0.1:50051";
   txn.commands.push_back(std::make_shared<AddPeer>(addPeer));
 
   Block block;
@@ -283,13 +280,11 @@ TEST_F(AmetsuchiTest, PeerTest) {
   auto peers = wsv->getPeers();
   ASSERT_TRUE(peers);
   ASSERT_EQ(peers->size(), 1);
-  ASSERT_EQ(peers->at(0).pubkey, addPeer.peer_key);
-  ASSERT_EQ(peers->at(0).address, addPeer.address);
+  ASSERT_EQ(peers->at(0), addPeer.peer);
 }
 
 TEST_F(AmetsuchiTest, queryGetAccountAssetTransactionsTest) {
-  auto storage =
-      StorageImpl::create(block_store_path, redishost_, redisport_, pgopt_);
+  auto storage = StorageImpl::create(block_store_path, pgopt_);
   ASSERT_TRUE(storage);
   auto wsv = storage->getWsvQuery();
   auto blocks = storage->getBlockQuery();
@@ -396,9 +391,10 @@ TEST_F(AmetsuchiTest, queryGetAccountAssetTransactionsTest) {
   validateAccountAsset(wsv, user3id, asset2id, iroha::Amount(150, 2));
   validateAccountAsset(wsv, user1id, asset2id, iroha::Amount(10, 2));
 
-  // Block store tests
+  // Block store test
+  auto hashes = {block1hash, block2hash, block3hash};
   validateCalls(blocks->getBlocks(1, 3),
-                [ i = 0, hashes = {block1hash, block2hash, block3hash} ](
+                [i = 0, &hashes](
                     auto eachBlock) mutable {
                   EXPECT_EQ(*(hashes.begin() + i), eachBlock.hash);
                   ++i;
@@ -422,8 +418,7 @@ TEST_F(AmetsuchiTest, queryGetAccountAssetTransactionsTest) {
 }
 
 TEST_F(AmetsuchiTest, AddSignatoryTest) {
-  auto storage =
-      StorageImpl::create(block_store_path, redishost_, redisport_, pgopt_);
+  auto storage = StorageImpl::create(block_store_path, pgopt_);
   ASSERT_TRUE(storage);
   auto wsv = storage->getWsvQuery();
 
@@ -650,7 +645,7 @@ Block getBlock() {
   Transaction txn;
   txn.creator_account_id = "admin1";
   AddPeer add_peer;
-  add_peer.address = "192.168.0.0";
+  add_peer.peer.address = "192.168.0.0";
   txn.commands.push_back(std::make_shared<AddPeer>(add_peer));
   Block block;
   block.transactions.push_back(txn);
@@ -668,8 +663,7 @@ TEST_F(AmetsuchiTest, TestingStorageWhenInsertBlock) {
       "Test case: create storage "
       "=> insert block "
       "=> assert that inserted");
-  auto storage =
-      StorageImpl::create(block_store_path, redishost_, redisport_, pgopt_);
+  auto storage = StorageImpl::create(block_store_path, pgopt_);
   ASSERT_TRUE(storage);
   auto wsv = storage->getWsvQuery();
   ASSERT_EQ(0, wsv->getPeers().value().size());
@@ -702,8 +696,7 @@ TEST_F(AmetsuchiTest, TestingStorageWhenDropAll) {
       "Test case: create storage "
       "=> insert block "
       "=> assert that inserted");
-  auto storage =
-      StorageImpl::create(block_store_path, redishost_, redisport_, pgopt_);
+  auto storage = StorageImpl::create(block_store_path, pgopt_);
   ASSERT_TRUE(storage);
   auto wsv = storage->getWsvQuery();
   ASSERT_EQ(0, wsv->getPeers().value().size());
@@ -722,8 +715,7 @@ TEST_F(AmetsuchiTest, TestingStorageWhenDropAll) {
   storage->dropStorage();
 
   ASSERT_EQ(0, wsv->getPeers().value().size());
-  auto new_storage =
-      StorageImpl::create(block_store_path, redishost_, redisport_, pgopt_);
+  auto new_storage = StorageImpl::create(block_store_path, pgopt_);
   ASSERT_EQ(0, wsv->getPeers().value().size());
   new_storage->dropStorage();
 }
@@ -735,8 +727,7 @@ TEST_F(AmetsuchiTest, TestingStorageWhenDropAll) {
  * with some other hash is not found.
  */
 TEST_F(AmetsuchiTest, FindTxByHashTest) {
-  auto storage =
-      StorageImpl::create(block_store_path, redishost_, redisport_, pgopt_);
+  auto storage = StorageImpl::create(block_store_path, pgopt_);
   ASSERT_TRUE(storage);
   auto blocks = storage->getBlockQuery();
 
@@ -790,6 +781,8 @@ TEST_F(AmetsuchiTest, FindTxByHashTest) {
   auto tx1hash = iroha::hash(tx1).to_string();
   auto tx2hash = iroha::hash(tx2).to_string();
   auto tx3hash = "some garbage";
+
+  auto tx1check = *blocks->getTxByHashSync(tx1hash);
 
   ASSERT_EQ(*blocks->getTxByHashSync(tx1hash), tx1);
   ASSERT_EQ(*blocks->getTxByHashSync(tx2hash), tx2);

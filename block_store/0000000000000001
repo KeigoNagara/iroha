@@ -1,0 +1,110 @@
+{
+    "signatures": [],
+    "created_ts": 0,
+    "hash": "f867e74c5f26b91b59121a662e3116c5c743dfbada08a2ad469dd0ca46f8dcb1",
+    "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "height": 1,
+    "txs_number": 1,
+    "transactions": [
+        {
+            "signatures": [],
+            "created_ts": 0,
+            "creator_account_id": "admin@test",
+            "tx_counter": 0,
+            "commands": [
+                {
+                    "command_type": "AddPeer",
+                    "peer": {
+                        "address": "localhost:10001",
+                        "peer_key": "1f087a7b66b0dddea35abfe52c0148209da8856fe9379e49653cac8e9b9de63c"
+                    }
+                },
+                {
+                    "command_type": "CreateRole",
+                    "role_name": "admin",
+                    "permissions": [
+                        "can_add_peer",
+                        "can_add_signatory",
+                        "can_create_account",
+                        "can_create_domain",
+                        "can_get_all_acc_ast",
+                        "can_get_all_acc_ast_txs",
+                        "can_get_all_acc_txs",
+                        "can_get_all_accounts",
+                        "can_get_all_signatories",
+                        "can_get_all_txs",
+                        "can_get_roles",
+                        "can_read_assets",
+                        "can_remove_signatory",
+                        "can_set_quorum"
+                    ]
+                },
+                {
+                    "command_type": "CreateRole",
+                    "role_name": "user",
+                    "permissions": [
+                        "can_add_signatory",
+                        "can_get_my_acc_ast",
+                        "can_get_my_acc_ast_txs",
+                        "can_get_my_acc_txs",
+                        "can_get_my_account",
+                        "can_get_my_signatories",
+                        "can_get_my_txs",
+                        "can_grant_can_add_signatory",
+                        "can_grant_can_remove_signatory",
+                        "can_grant_can_set_detail",
+                        "can_grant_can_set_quorum",
+                        "can_grant_can_transfer",
+                        "can_receive",
+                        "can_remove_signatory",
+                        "can_set_quorum",
+                        "can_transfer"
+                    ]
+                },
+                {
+                    "command_type": "CreateRole",
+                    "role_name": "money_creator",
+                    "permissions": [
+                        "can_add_asset_qty",
+                        "can_create_asset",
+                        "can_receive",
+                        "can_transfer"
+                    ]
+                },
+                {
+                    "command_type": "CreateDomain",
+                    "domain_id": "test",
+                    "user_default_role": "user"
+                },
+                {
+                    "command_type": "CreateAsset",
+                    "asset_name": "coin",
+                    "domain_id": "test",
+                    "precision": 2
+                },
+                {
+                    "command_type": "CreateAccount",
+                    "account_name": "admin",
+                    "domain_id": "test",
+                    "pubkey": "6dc59cf8d8322fb339d2c5715b1065a2262ff8f09163d2fdd4edb6418a3b7acc"
+                },
+                {
+                    "command_type": "CreateAccount",
+                    "account_name": "test",
+                    "domain_id": "test",
+                    "pubkey": "675460c23be7250a1c3fa3f91d89f20cbc61942d64f48ec19422c5e20040941a"
+                },
+                {
+                    "command_type": "AppendRole",
+                    "account_id": "admin@test",
+                    "role_name": "admin"
+                },
+                {
+                    "command_type": "AppendRole",
+                    "account_id": "admin@test",
+                    "role_name": "money_creator"
+                }
+            ]
+        }
+    ]
+}

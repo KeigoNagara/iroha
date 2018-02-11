@@ -19,10 +19,11 @@
 #define IROHA_TEMPORARY_FACTORY_HPP
 
 #include <memory>
-#include "ametsuchi/temporary_wsv.hpp"
 
 namespace iroha {
   namespace ametsuchi {
+
+    class TemporaryWsv;
 
     class TemporaryFactory {
      public:
@@ -38,6 +39,6 @@ namespace iroha {
       virtual ~TemporaryFactory() = default;
     };
 
-  } // namespace ametsuchi
-} // namespace iroha
-#endif //IROHA_TEMPORARY_FACTORY_HPP
+  }  // namespace ametsuchi
+}  // namespace iroha
+#endif  // IROHA_TEMPORARY_FACTORY_HPP

@@ -1,0 +1,50 @@
+{
+    "signatures": [
+        {
+            "pubkey": "1f087a7b66b0dddea35abfe52c0148209da8856fe9379e49653cac8e9b9de63c",
+            "signature": "c79993cf084d31bb01b7f56c6474fe3f47f64b59e0a5ed65517a27be9f9498f127c48ecafd45806d6bbbd577e98e8c95bdd1ff0f60b490de65d795c19473210e"
+        }
+    ],
+    "created_ts": 0,
+    "hash": "ee9f273613ac2069cda04f77570b2ff86167064de7241dd9ec2406cf36e013c6",
+    "prev_hash": "28c9b62ca9c3847e8a8f576bcf8f044257c4ea83206d35ce818f765c786af61f",
+    "height": 10,
+    "txs_number": 1,
+    "transactions": [
+        {
+            "signatures": [
+                {
+                    "pubkey": "6dc59cf8d8322fb339d2c5715b1065a2262ff8f09163d2fdd4edb6418a3b7acc",
+                    "signature": "ea095bc2d621b784a79f2d4ba44a6b12202ed31fddea65a28efa49fd24f4c7ffaf54b0c9bd566e5e16ae18ef5e9801c789aa47bfb5038817c3b2859ed410090f"
+                }
+            ],
+            "created_ts": 1518334608736,
+            "creator_account_id": "admin@test",
+            "tx_counter": 2,
+            "commands": [
+                {
+                    "command_type": "TransferAsset",
+                    "src_account_id": "admin@test",
+                    "dest_account_id": "alice@test",
+                    "asset_id": "coin#test",
+                    "description": "",
+                    "amount": {
+                        "value": "10",
+                        "precision": 2
+                    }
+                },
+                {
+                    "command_type": "TransferAsset",
+                    "src_account_id": "admin@test",
+                    "dest_account_id": "alice@test",
+                    "asset_id": "coin#test",
+                    "description": "",
+                    "amount": {
+                        "value": "10",
+                        "precision": 2
+                    }
+                }
+            ]
+        }
+    ]
+}

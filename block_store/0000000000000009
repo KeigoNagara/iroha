@@ -1,0 +1,34 @@
+{
+    "signatures": [
+        {
+            "pubkey": "1f087a7b66b0dddea35abfe52c0148209da8856fe9379e49653cac8e9b9de63c",
+            "signature": "eb2253862b10254f5b32927f9b63ad3d7338ea8071d57dc514b8817f9a673a986e69eee72649569b1ccfb5e94ab7ed53b2e6293f41698f526f7baf44cbc00c0f"
+        }
+    ],
+    "created_ts": 0,
+    "hash": "28c9b62ca9c3847e8a8f576bcf8f044257c4ea83206d35ce818f765c786af61f",
+    "prev_hash": "2b7099f204a9e64aafcfc71ffae738a69659fec9400629b0e27daa7b19a83ba6",
+    "height": 9,
+    "txs_number": 1,
+    "transactions": [
+        {
+            "signatures": [
+                {
+                    "pubkey": "6dc59cf8d8322fb339d2c5715b1065a2262ff8f09163d2fdd4edb6418a3b7acc",
+                    "signature": "945bcc95e72eddea8325798101cd871c25bde8759c6d22bb4b8fe777b8159ee3449aa4a7389c9d0e6b924740af3d5cabd1692a21bcb3c92e6943a6fe8415d003"
+                }
+            ],
+            "created_ts": 1518334440245,
+            "creator_account_id": "admin@test",
+            "tx_counter": 1,
+            "commands": [
+                {
+                    "command_type": "CreateAccount",
+                    "account_name": "bob",
+                    "domain_id": "test",
+                    "pubkey": "c2308b3d7e1a2ec46526a068141473ebbab960bf70b368905c65dc9f7570bb0f"
+                }
+            ]
+        }
+    ]
+}

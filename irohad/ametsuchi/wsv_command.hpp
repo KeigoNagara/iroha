@@ -20,14 +20,19 @@
 
 #include <set>
 #include <string>
-#include "common/types.hpp"
-#include "model/account.hpp"
-#include "model/account_asset.hpp"
-#include "model/asset.hpp"
-#include "model/domain.hpp"
-#include "model/peer.hpp"
+
+#include "common/types.hpp"  // for pubkey_t
 
 namespace iroha {
+
+  namespace model {
+    struct Asset;
+    struct Account;
+    struct Domain;
+    struct Peer;
+    struct AccountAsset;
+  }
+
   namespace ametsuchi {
 
     /**
@@ -53,11 +58,11 @@ namespace iroha {
       virtual bool insertAccountRole(const std::string &account_id,
                                      const std::string &role_name) = 0;
       /**
-        * Unbind account and role
-        * @param account_id
-        * @param role_name
-        * @return true if delete successful
-        */
+       * Unbind account and role
+       * @param account_id
+       * @param role_name
+       * @return true if delete successful
+       */
       virtual bool deleteAccountRole(const std::string &account_id,
                                      const std::string &role_name) = 0;
 

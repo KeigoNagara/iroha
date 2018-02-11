@@ -20,12 +20,24 @@
 
 #include "ametsuchi/wsv_command.hpp"
 
-#include <pqxx/nontransaction>
+#include <set>
+#include <string>
 
+#include "ametsuchi/impl/postgres_wsv_common.hpp"
 #include "logger/logger.hpp"
 
 namespace iroha {
+
+  namespace model {
+    struct Asset;
+    struct Account;
+    struct Domain;
+    struct Peer;
+    struct AccountAsset;
+  }  // namespace model
+
   namespace ametsuchi {
+
     class PostgresWsvCommand : public WsvCommand {
      public:
       explicit PostgresWsvCommand(pqxx::nontransaction &transaction);
@@ -71,8 +83,15 @@ namespace iroha {
       const size_t default_tx_counter = 0;
 
       pqxx::nontransaction &transaction_;
-
       logger::Logger log_;
+
+      using ExecuteType = decltype(makeExecute(transaction_, log_));
+      ExecuteType execute_;
+
+      // TODO: refactor to return Result when it is introduced IR-775
+      bool execute(const std::string &statement) noexcept {
+        return static_cast<bool>(execute_(statement));
+      }
     };
   }  // namespace ametsuchi
 }  // namespace iroha

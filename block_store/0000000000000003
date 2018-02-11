@@ -1,0 +1,14 @@
+{
+    "signatures": [
+        {
+            "pubkey": "1f087a7b66b0dddea35abfe52c0148209da8856fe9379e49653cac8e9b9de63c",
+            "signature": "9422cfadafa5d9707add3d4ba773c564423d76ff951a273f5e34892a5329503d26514ecc4cd340f08cd68486e53b6fed5b702f047528f94a56be526b09a1440c"
+        }
+    ],
+    "created_ts": 0,
+    "hash": "fd0f3c7605f117c4cf8359b0da99ddbb6e1b4b079f0c726e665997cd6572edcd",
+    "prev_hash": "1993ba2d5f03cf1c486b21f60ccaf102192b3379b3f347fa610d0496620e17f2",
+    "height": 3,
+    "txs_number": 0,
+    "transactions": []
+}

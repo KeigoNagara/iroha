@@ -1,0 +1,37 @@
+{
+    "signatures": [
+        {
+            "pubkey": "1f087a7b66b0dddea35abfe52c0148209da8856fe9379e49653cac8e9b9de63c",
+            "signature": "ab9f4e1107a1d7d86a14674b5a2872a755e4cdc4e8caf0bd2709a8a810d2a0cd6d61378c09129196f6d193ee7015c6f46083e438d2cf7ece38f785eb2948d404"
+        }
+    ],
+    "created_ts": 0,
+    "hash": "763de57ecb8d85249c5fc34b97aea223066e9ed74553bc193d60046f2678fe30",
+    "prev_hash": "8c1bfd2b5e0433ad773823d85cb4cd4f38b58300f0252261db2979eb74c3c52e",
+    "height": 5,
+    "txs_number": 1,
+    "transactions": [
+        {
+            "signatures": [
+                {
+                    "pubkey": "6dc59cf8d8322fb339d2c5715b1065a2262ff8f09163d2fdd4edb6418a3b7acc",
+                    "signature": "0c7d851be276d8149921fb422692b47239957e7a1a46e4ec2377881ddff24f3328d97daa640f05f8acbe562c4321006a40362679f11d097b3243f1fd723fa506"
+                }
+            ],
+            "created_ts": 1518331249586,
+            "creator_account_id": "admin@test",
+            "tx_counter": 4,
+            "commands": [
+                {
+                    "command_type": "AddAssetQuantity",
+                    "account_id": "admin@test",
+                    "asset_id": "coin#test",
+                    "amount": {
+                        "value": "100",
+                        "precision": 2
+                    }
+                }
+            ]
+        }
+    ]
+}

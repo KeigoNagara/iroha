@@ -1,0 +1,34 @@
+{
+    "signatures": [
+        {
+            "pubkey": "1f087a7b66b0dddea35abfe52c0148209da8856fe9379e49653cac8e9b9de63c",
+            "signature": "2d7589ea0321559be16738a4717ffb7d9d201d417d888d3427db229f97abfd98b20db995ceb7270dd83a70e1a7b2a1e8a83b5657cc76836613e5072a0cfa980d"
+        }
+    ],
+    "created_ts": 0,
+    "hash": "696f49e6ef216cf344e5921198b2b652d034e9106b419a4459ed5aa68c389bf8",
+    "prev_hash": "763de57ecb8d85249c5fc34b97aea223066e9ed74553bc193d60046f2678fe30",
+    "height": 6,
+    "txs_number": 1,
+    "transactions": [
+        {
+            "signatures": [
+                {
+                    "pubkey": "6dc59cf8d8322fb339d2c5715b1065a2262ff8f09163d2fdd4edb6418a3b7acc",
+                    "signature": "ffea7fcd8706bc722396c169a938379426483bc037ba70e9b7900488193f3c84ffaff6f61e7d56689d8bbb7efa47ebb6447c54a74b9b457164c6a0f36f2ca004"
+                }
+            ],
+            "created_ts": 1518333748823,
+            "creator_account_id": "admin@test",
+            "tx_counter": 5,
+            "commands": [
+                {
+                    "command_type": "CreateAsset",
+                    "asset_name": "mycoin",
+                    "domain_id": "test",
+                    "precision": 2
+                }
+            ]
+        }
+    ]
+}
